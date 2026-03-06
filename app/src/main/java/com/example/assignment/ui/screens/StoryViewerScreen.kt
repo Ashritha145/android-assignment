@@ -1,5 +1,6 @@
 package com.example.assignment.ui.screens
 
+import androidx.compose.animation.*
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import com.example.assignment.R
@@ -15,7 +16,10 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -23,37 +27,50 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.assignment.data.Story
+import com.example.assignment.data.stories
 
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StoryViewerScreen(
-    name: String,
-    image: Int,
+    startIndex: Int,
     navController: NavController
 ) {
 
+    var currentIndex by remember { mutableStateOf(startIndex) }
+
     val progress = remember { Animatable(0f) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(currentIndex) {
+
+        progress.snapTo(0f)
 
         progress.animateTo(
             1f,
-            animationSpec = tween(5000) // 10 seconds
+            animationSpec = tween(10000)
         )
 
-        navController.popBackStack()
+        if (currentIndex < stories.lastIndex) {
+            currentIndex++
+        } else {
+            navController.popBackStack()
+        }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(Modifier.fillMaxSize()) {
 
         Column {
+
+            val story = stories[currentIndex]
+
             Text(
-                text = name,
+                text = story.name,
                 color = Color.Black,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(16.dp)
             )
+
             LinearProgressIndicator(
                 progress = progress.value,
                 color = Color.Red,
@@ -61,14 +78,24 @@ fun StoryViewerScreen(
                     .fillMaxWidth()
                     .height(4.dp)
             )
-            Image(
-                painter = painterResource(image),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
 
+            AnimatedContent(
+                targetState = currentIndex,
+                transitionSpec = {
+                    slideInHorizontally { width -> width } togetherWith
+                            slideOutHorizontally { width -> -width }
+                }
+            ) { index ->
 
+                val animatedStory = stories[index]
+
+                Image(
+                    painter = painterResource(animatedStory.image),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }

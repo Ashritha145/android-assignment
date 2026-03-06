@@ -19,19 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.assignment.data.Story
+import com.example.assignment.data.stories
 
 
 @Composable
 fun StoryRow(navController: NavController) {
 
-    val stories = listOf(
-        Story("Alice", R.drawable.img),
-        Story("Bob", R.drawable.img_1),
-        Story("Charlie", R.drawable.img_5),
-        Story("David", R.drawable.img_6),
-        Story("Olivia",R.drawable.img_8),
-        Story("Amelia",R.drawable.img_9)
-    )
+
 
     LazyRow(
         modifier = Modifier.padding(10.dp)
@@ -47,7 +41,7 @@ fun StoryRow(navController: NavController) {
                     .padding(8.dp)
                     .clickable {
                         navController.navigate(
-                            "story/${story.name}/${story.image}"
+                            "story/${index}"
                         )
                     }
             ) {

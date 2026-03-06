@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import com.example.assignment.R
 import com.example.assignment.ui.components.PostItem
 import com.example.assignment.ui.components.StoryRow
-import com.example.assignment.ui.screens.PostCarousel
+import com.example.assignment.ui.components.PostCarousel
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -23,13 +23,18 @@ fun HomeScreen(
         }
 
         item {
-            PostCarousel()
+            PostCarousel(
+                username = "Alice",
+                profile = R.drawable.profile_img
+            )
         }
 
         items(5) {
 
             PostItem(
-                R.drawable.img_7
+                image=R.drawable.img_9,
+                username = "Alice",
+                profile = R.drawable.profile_img
             )
         }
     }

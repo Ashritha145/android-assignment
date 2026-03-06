@@ -1,4 +1,4 @@
-package com.example.assignment.ui.screens
+package com.example.assignment.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,10 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.assignment.R
 @Composable
-fun PostCarousel() {
+fun PostCarousel(username: String, profile: Int) {
 
     val images = listOf(
         R.drawable.img_4,
@@ -35,14 +38,36 @@ fun PostCarousel() {
 
     val pagerState = rememberPagerState(pageCount = { images.size })
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+
+            Image(
+                painter = painterResource(profile),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = username,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxWidth()
         ) { page ->
+
             Image(
                 painter = painterResource(id = images[page]),
                 contentDescription = null,
@@ -57,26 +82,31 @@ fun PostCarousel() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
 
-            repeat(images.size) { index ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-                val isSelected = pagerState.currentPage == index
+                repeat(images.size) { index ->
 
-                Box(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .size(
-                            if (isSelected) 10.dp else 6.dp
-                        )
-                        .clip(CircleShape)
-                        .background(
-                            if (isSelected) Color.Black else Color.LightGray
-                        )
-                )
+                    val isSelected = pagerState.currentPage == index
+
+                    Box(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .height(6.dp)
+                            .width(if (isSelected) 26.dp else 8.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(
+                                if (isSelected) Color.Black
+                                else Color.LightGray
+                            )
+                    )
+                }
             }
         }
     }

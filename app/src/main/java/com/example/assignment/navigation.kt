@@ -56,19 +56,16 @@ fun MainScreen() {
             composable("profile") { ProfileScreen() }
 
             composable(
-                route = "story/{name}/{image}",
+                route = "story/{index}",
                 arguments = listOf(
-                    navArgument("name") { type = NavType.StringType },
-                    navArgument("image") { type = NavType.IntType }
+                    navArgument("index"){type= NavType.IntType}
                 )
             ) { backStackEntry ->
 
-                val name = backStackEntry.arguments?.getString("name") ?: ""
-                val image = backStackEntry.arguments?.getInt("image") ?: 0
+                val index=backStackEntry.arguments?.getInt("index")?:0
 
                 StoryViewerScreen(
-                    name = name,
-                    image = image,
+                   startIndex = index,
                     navController = navController
                 )
             }
